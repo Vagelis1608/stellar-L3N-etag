@@ -1,37 +1,44 @@
-<h1 align="center">hanshow stellar L3N 电子价签/airtag固件</h1>
+## hanshow stellar L3N ESL firmware
+## This page is translated via Google translate, with minor manual fixes
 
-### 适用型号 L3N@ (注意：只适配了L3N@ 2.9寸设备，原项目的其他型号可能已经不再兼容)
 
-### 最终效果
+### Applicable model L3N@ (Note: only suitable for L3N@ 2.9-inch devices, other models of the original project may no longer be compatible)
 
-- [web 上传图片](https://javabin.cn/stellar-L3N-etag/web_tools/)
-  ![蓝牙管理](/images/web.jpg)
-- 时钟模式2，图片模式
-  ![时钟模式2，图片模式](/images/1553702163.jpg)
 
-![时钟模式2，图片模式](/images/1587504241.jpg)
 
-### 刷入固件步骤
+### final effect
 
-- 1. 拆开电池后盖观察主板是否是如下图所示。（或者查看主控是否为TLSR8359）
 
-![焊接图示](/USB_UART_Flashing_connection.jpg)
+- web upload pictures
+![Bluetooth Management](/images/web.jpg)
 
-- 2. 焊接 GND, VCC, RX, RTS四根线。
-- 3. 使用usb2ttl模块(CH340)链接焊接的四根线。其中rx 链接 tx, tx链接 rx, vcc链接3.3v, GND链接 GND。RTS飞线和芯片CH340G第三脚链接（也可不焊，烧录前手动和GND连一下）。
-- 4. 打开https://atc1441.github.io/ATC_TLSR_Paper_UART_Flasher.html, 波特率选择默认 460800，Atime默认，文件选择Firmware/ATC_Paper.bin
-- 5. 先点击unlock,再点击write to flush,等待完成。成功后，屏幕会自动刷新。
+- clock mode 2, picture mode
+![Clock Mode 2, Picture Mode](/images/1553702163.jpg)
 
-### 项目编译
+![Clock Mode 2, Picture Mode](/images/1587504241.jpg)
+
+
+
+### Flash into the firmware steps
+- 1. Remove the battery cover and observe whether the motherboard is as shown in the figure below. (Or check whether the master control is TLSR8359)
+
+![Welding icon](/USB_UART_Flashing_connection.jpg)
+
+- 2. Solder GND, VCC, RX, RTS four wires.
+- 3. Use the usb2ttl module (CH340) to link the four soldered wires. Where rx is connected to tx, tx is connected to rx, vcc is connected to 3.3v, and GND is connected to GND. The RTS flying wire is connected to the third pin of the chip CH340G (you can also not solder it, manually connect it to GND before programming).
+- 4. Open https://atc1441.github.io/ATC_TLSR_Paper_UART_Flasher.html, the default baud rate is 460800, Atime is the default, and the file is Firmware/ATC_Paper.bin
+- 5. Click unlock first, then click write to flush, and wait for completion. On success, the screen will refresh automatically.
+
+### Project compilation
 
 ```cmd
 
-    cd Firmware
-    makeit.exe clean && makeit.exe -j12
+     cd Firmware
+     makeit.exe clean && makeit.exe -j12
 
 ```
 
-成功后提示内容:
+Prompt content after success:
 
 ```
 'Create Flash image (binary format)'
@@ -39,10 +46,10 @@
 'Invoking: Print Size'
 "tc32_windows\\bin\\"tc32-elf-size -t ./out/ATC_Paper.elf
 copy from `./out/ATC_Paper.elf' [elf32-littletc32] to `./out/../ATC_Paper.bin' [binary]
-   text    data     bss     dec     hex filename
-  75608    4604   25341  105553   19c51 ./out/ATC_Paper.elf
-  75608    4604   25341  105553   19c51 (TOTALS)
-'Finished building: sizedummy'
+    text data bss dec hex filename
+   75608 4604 25341 105553 19c51 ./out/ATC_Paper.elf
+   75608 4604 25341 105553 19c51 (TOTALS)
+'Finished building: sizeddummy'
 ' '
 tl_fireware_tools.py v0.1 dev
 Firmware CRC32: 0xe62d501e
@@ -52,54 +59,47 @@ Firmware CRC32: 0xe62d501e
 ' '
 ```
 
-### 蓝牙链接和OTA升级
+### Bluetooth link and OTA update
+- 1. The TTL TX line must be disconnected first, otherwise the Bluetooth connection will not work.
+- 2. OTA upgrade: https://atc1441.github.io/ATC_TLSR_Paper_OTA_writing.html
 
-- 1. 必须先断开TTL TX线，不然蓝牙链接不上。
-- 2. OTA升级： https://atc1441.github.io/ATC_TLSR_Paper_OTA_writing.html
+### upload image
+- 1. Run `cd web_tools && python -m http.server`
+- 2. Open http://127.0.0.1:8000 and link Bluetooth on the page
+- 3. Select a picture and upload it. After uploading, you can add text or draw text manually. The dithering algorithm can also be set.
+- 4. Send to the device, wait for the screen to refresh
 
-### 上传图片
 
-- 1. 运行 `cd web_tools && python -m http.server`
-- 2. 打开 http://127.0.0.1:8000 后在页面上链接蓝牙
-- 3. 选择图片并上传，上传后可添加文字或者手动绘制文字。也可设置抖动算法。
-- 4. 发送到设备，等待屏幕刷新
+### Resolved/Unresolved Issues
+- [x] compile error
+- [x] Brushing does not take effect
+- [x] Wrong/abnormal screen area
+- [x] Bluetooth cannot be connected/Bluetooth OTA upgrade
+- [ ] Automatic model identification
+- [x] python image generation script
+- [x] Send pictures via bluetooth, the display size is not correct
+- [x] Add notify after uploading pictures via bluetooth
+- [x] Add scene and support switching
+- [x] Picture mode
+- [x] web supports image switching
+- [x] Add new time scene
+- [x] Support setting year, month and day
+- [x] web supports drawing editing, uploading pictures directly, black and white dithering algorithm
+- [x] Three-color dithering algorithm, three-color display support on the device side, Bluetooth transmission support
+- [x] Is the data abnormal after epd buffer is refreshed (occasional black bars on the left or right)?
+- [x] Chinese display (some Chinese are displayed in bitmap, not all Chinese are supported)
 
-### 接入苹果findmy网络，模拟airtag
-- 设备已支持接入苹果findmy网络，(设备会通过蓝牙广播自动发送符合airtag协议的公钥，当设备附近的苹果设备接受到公钥时，就会使用公钥加密自己的位置信息然后发送到findmy服务器，用户可使用自己的私钥从苹果服务器获取设备的位置信息）
-- 该功能默认关闭
-- 打开该功能 需要修改ble.c文件 PUB_KEY=后的数据，改为你自己的公钥。PUB_KEY获取方法可参考项目(https://github.com/dchristl/macless-haystack 或者 https://github.com/malmeloo/openhaystack)
-- 打开该功能 还需要修改ble.c文件 AIR_TAG_OPEN=1
+### Original readme.md
 
-### 已解决/未解决问题
+[README_EN.md](/README_en.md) (For other models, please refer to the original project, this project only supports L3N@ 2.9-inch devices)
+[README_CN.md](/README_cn.md) (This is the original readme file..)
 
-- [X]  编译报错
-- [X]  刷入不生效
-- [X]  屏幕区域不对/异常
-- [X]  蓝牙无法链接/蓝牙OTA升级
-- [ ]  自动识别型号
-- [X]  python 图片生成脚本
-- [X]  蓝牙发送图片, 显示大小不对问题解决
-- [X]  添加蓝牙上传图片后notify
-- [X]  添加场景且支持切换
-- [X]  图片模式
-- [X]  web 支持图片切换
-- [X]  添加新的时间场景
-- [X]  支持设置年月日
-- [X]  web 支持画图编辑，直接上传图片，黑白抖动算法
-- [X]  三色抖动算法、设备端三色显示支持，蓝牙传输支持
-- [X]  epd buffer刷新后 数据异常（左或右偶尔有黑条）？
-- [X]  中文显示 （部分中文以bitmap显示，不支持全部中文）
-- [X]  支持接入苹果findmy网络，模拟airtag
+> Note:
+> Modified based on the project [ATC_TLSR_Paper](https://github.com/atc1441/ATC_TLSR_Paper).
 
-### 原始readme.md
 
-[README_EN.md](/README_en.md) （其他型号请参考原始项目，这个项目只支持L3N@ 2.9寸设备）
+### material
 
-> 注：
-> 基于该项目 [ATC_TLSR_Paper](https://github.com/atc1441/ATC_TLSR_Paper) 修改。
-
-### 资料
-
-- [TLSR8359规格说明书](/docs/DS_TLSR8359-E_Datasheet for Telink ULP 2.4GHz RF SoC TLSR8359.pdf)
-- [tlsr8x5x蓝牙开发说明书（中文）](/docs/Telink Kite BLE SDK Developer Handbook中文.pdf)
-- [屏幕驱动说明书 SSD1680.pdf](/docs/SSD1680.pdf)
+- [TLSR8359 Specification Sheet](/docs/DS_TLSR8359-E_Datasheet for Telink ULP 2.4GHz RF SoC TLSR8359.pdf)
+- [tlsr8x5x Bluetooth Development Manual (Chinese)](/docs/Telink Kite BLE SDK Developer Handbook Chinese.pdf)
+- [Screen Driver Manual SSD1680.pdf](/docs/SSD1680.pdf)
