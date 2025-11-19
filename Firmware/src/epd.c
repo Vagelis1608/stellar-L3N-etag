@@ -26,7 +26,7 @@ RAM uint8_t epd_model = 0; // 0 = Undetected, 1 = BW213, 2 = BWR213, 3 = BWR154,
 const char *epd_model_string[] = {"NC", "BW213", "BWR213", "BWR154", "213ICE", "BWR296"};
 RAM uint8_t epd_update_state = 0;
 
-RAM uint8_t epd_scene = 2;
+RAM uint8_t epd_scene = 1;
 RAM uint8_t epd_wait_update = 0;
 
 RAM uint8_t hour_refresh = 100;
