@@ -20,7 +20,7 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v5.0.0
       with:
-        name: ATC_Paper-${GITHUB_RUN_ID}.bin
+        name: ATC_Paper-${{ github.run_number }}.bin
         path: ./Firmware/ATC_Paper.bin
-        error: ATC_Paper.bin Not Found!
+        if-no-files-found: error
         compression-level: 9
