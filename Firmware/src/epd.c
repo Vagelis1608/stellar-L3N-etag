@@ -438,9 +438,9 @@ void epd_display_pc(struct date_time _time, uint16_t battery_mv, int16_t tempera
 
     sprintf(buff, "Power" );
     obdWriteStringCustom(&obd, (GFXfont *)&Dialog_plain_16, 5, 109, (char *)buff, 1);
-    sprintf(buff, "%uW", remData.totalram );
+    sprintf(buff, "%u.%uW", remData.totalram/10, remData.totalram%10 );
     obdWriteStringCustom(&obd, (GFXfont *)&Dialog_plain_16, 130, 109, (char *)buff, 1);
-    sprintf(buff, "%uW", remData.freeram );
+    sprintf(buff, "%u.%uW", remData.freeram/10, remData.freeram%10 );
     obdWriteStringCustom(&obd, (GFXfont *)&Dialog_plain_16, 233, 109, (char *)buff, 1);
 
     obdRectangle(&obd, 1, 19, 295, 110, 1, 0);
