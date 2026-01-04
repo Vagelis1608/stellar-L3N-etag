@@ -7,6 +7,8 @@ Currently supported models are the L3N@ and Pro-266R-N
 Use the model setter in the Bluetooth OTA page to set the model after flashing the firmware.
 
 
+<!-- GitAds-Verify: FD7GSQ323GQ84KZMMX5Z2LEI14KXRAN1 -->
+
 
 ## This page is translated via Google translate, with minor manual fixes
 
