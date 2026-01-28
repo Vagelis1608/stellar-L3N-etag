@@ -19,6 +19,7 @@ RAM uint8_t has_ever_reached[10] = {0};
 uint8_t map[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 extern settings_struct settings;
+extern remoteData remData;
 
 _attribute_ram_code_ void init_time(void)
 {
@@ -43,6 +44,10 @@ _attribute_ram_code_ void handler_time(void)
         current_date.tm_min = (current_unix_time / 60) % 60;
         current_date.tm_hour = ((current_unix_time / 60) / 60) % 24;
         current_date.tm_sec = current_unix_time % 60;
+
+        if ( current_unix_time % 3600 == 0 && remData.updated > 100 && (current_unix_time - remData.updated) > 3600 ) {
+            remoteDataReset();
+        }
 
         if (current_unix_time % 86400 == 0) {
             current_date.tm_month = current_date.tm_month % 12;
