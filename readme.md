@@ -8,10 +8,6 @@ Use the model setter in the Bluetooth OTA page to set the model after flashing t
 
 
 
-## GitAds Sponsored
-[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=vagelis1608/stellar-etags@github)](https://gitads.dev/v1/ad-track?source=vagelis1608/stellar-etags@github)
-
-
 
 ## This page is translated via Google translate, with minor manual fixes
 
