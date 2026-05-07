@@ -16,6 +16,7 @@ typedef struct Settings_struct
 	uint8_t epd_model;
 	int16_t time_dilation;
 	uint8_t epdScene;
+	uint32_t refreshRate; // full screen refresh, in seconds
 	uint8_t crc;// Needs to be at the last position otherwise the settings can not be validated on next boot!!!!
 } settings_struct;
 

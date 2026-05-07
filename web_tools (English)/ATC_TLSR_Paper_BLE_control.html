@@ -308,17 +308,16 @@
     function setTime(hourOffset) {
       let unixNow = Math.round(Date.now() / 1000)+(60*60*hourOffset);
 	  
-	  var s = new Date(unixNow*1000).toLocaleTimeString("de-DE")
+      var s = new Date(unixNow*1000).toLocaleTimeString("de-DE")
 
       addLog("Setting time : " + s + " : dd" + intToHex4(unixNow));
       rxTxSendCommand(hexToBytes("dd" + intToHex4(unixNow)));
     }
-	
-	function sendForceEpd(nr)
-	{
+
+	  function sendForceEpd(nr) {
       addLog("Forcing EPD : e0" + byteToHex(nr+1));
       rxTxSendCommand(hexToBytes("e0" + byteToHex(nr+1)));
-	}
+  	}
 
     function setStatus(statusText) {
       document.getElementById("status").innerHTML = statusText;

@@ -40,6 +40,7 @@ void reset_settings_to_default(void)
 	settings.epd_model = 5;
 	settings.time_dilation = 5000;
 	settings.epdScene = 3;
+	settings.refreshRate = 3600; // seconds = 1 hour
 }
 
 void save_settings_to_flash(void)

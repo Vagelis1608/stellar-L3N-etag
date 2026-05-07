@@ -26,6 +26,7 @@ extern const uint8_t ucMirror[];
 extern remoteData remData;
 RAM uint32_t remLastUpdate = 0;
 extern settings_struct settings;
+extern uint32_t current_unix_time;
 
 RAM uint8_t epd_model = 0; // 0 = Undetected, 1 = BW213, 2 = BWR213, 3 = BWR154, 4 = BW213ICE, 5 BWR296, 6 BWR296x156
 const char *epd_model_string[] = {"NC", "BW213", "R213", "R154", "213ICE", "R296", "Rh160"};
@@ -35,7 +36,7 @@ RAM uint8_t epd_scene = 3;
 RAM uint8_t epd_scene_on_screen = 3;
 RAM uint8_t epd_wait_update = 0;
 
-RAM uint8_t hour_refresh = 100;
+RAM uint8_t fullRefresh = 0;
 RAM uint8_t minute_refresh = 100;
 
 const char *BLE_conn_string[] = {"BLE 0", "BLE 1"};
@@ -483,18 +484,12 @@ void update_time_scene(struct date_time _time, uint16_t battery_mv, int16_t temp
     if (epd_wait_update) {
         scene(_time, battery_mv, temperature, 1);
         epd_wait_update = 0;
-    }
-
-    else if (_time.tm_min != minute_refresh)
-    {
+    } else if (_time.tm_min != minute_refresh) {
         minute_refresh = _time.tm_min;
-        if (_time.tm_hour != hour_refresh)
-        {
-            hour_refresh = _time.tm_hour;
+        if ((current_unix_time / settings.refreshRate) != fullRefresh) {
+            fullRefresh = current_unix_time / settings.refreshRate;
             scene(_time, battery_mv, temperature, 1);
-        }
-        else
-        {
+        } else {
             scene(_time, battery_mv, temperature, 0);
         }
     }
