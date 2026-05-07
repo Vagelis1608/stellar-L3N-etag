@@ -36,7 +36,7 @@ RAM uint8_t epd_scene = 3;
 RAM uint8_t epd_scene_on_screen = 3;
 RAM uint8_t epd_wait_update = 0;
 
-RAM uint8_t fullRefresh = 0;
+RAM uint32_t fullRefresh = 0;
 RAM uint8_t minute_refresh = 100;
 
 const char *BLE_conn_string[] = {"BLE 0", "BLE 1"};
