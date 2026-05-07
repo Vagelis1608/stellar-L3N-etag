@@ -36,7 +36,8 @@ void cmd_parser(void * p){
 	}else if(inData == 0xB0){
 		settings.show_batt_enabled = false;//Disable battery on LCD
 	} else if (inData == 0xB2) {
-		settings.refreshRate = (req->dat[1]<<24) + (req->dat[2]<<16) + (req->dat[3]<<8) + (req->dat[4]);
+		uint32_t input = (req->dat[1]<<24) + (req->dat[2]<<16) + (req->dat[3]<<8) + (req->dat[4]);
+		if (input == 0 || input >= 60) settings.refreshRate = input;
 	}else if(inData == 0xA0){
 		settings.blinking_smiley = false;
 		settings.comfort_smiley = false;

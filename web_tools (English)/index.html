@@ -181,6 +181,10 @@
 			await rxTxSendCommand(hexToBytes(cmd));
 		}
 
+		function refreshTimer(rt) {
+			triggerRxTxCmd('b2'+intToHex(rt, 4));
+		}
+
 		async function triggerEpdCmd(cmd) {
 			addLog(`Send command: ${cmd}`)
 			await sendCommand(hexToBytes(cmd));
@@ -500,7 +504,7 @@
 	<button type="button" onclick="triggerRxTxCmd(document.getElementById('cmdTXT').value);">Send command</button>
 	<br>
 	<input type="text" id="refreshTimer" value="3600">
-	<button type="button" onclick="triggerRxTxCmd('b2'+document.getElementById('refreshTimer').value);" title="Change the amount of time between full screen refreshes, in seconds.">Send refresh timer</button>
+	<button type="button" onclick="refreshTimer(document.getElementById('refreshTimer').value);" title="Change the amount of time between full screen refreshes, in seconds. Minimum 60, or 0 to disable auto full screen refresh.">Send refresh timer</button>
 	<br>
 	<button type="button" onclick="triggerRxTxCmd('e100')" title="Click the button and upload the picture. The picture will be permanently displayed on the screen">Set to picture mode</button>
 	<button type="button" onclick="triggerRxTxCmd('e101')" title="Click this button, switch to clock mode">Set to clock mode 1</button>

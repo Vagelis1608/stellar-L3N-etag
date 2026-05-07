@@ -486,7 +486,7 @@ void update_time_scene(struct date_time _time, uint16_t battery_mv, int16_t temp
         epd_wait_update = 0;
     } else if (_time.tm_min != minute_refresh) {
         minute_refresh = _time.tm_min;
-        if ((current_unix_time / settings.refreshRate) != fullRefresh) {
+        if (settings.refreshRate > 0 && (current_unix_time / settings.refreshRate) != fullRefresh) {
             fullRefresh = current_unix_time / settings.refreshRate;
             scene(_time, battery_mv, temperature, 1);
         } else {
