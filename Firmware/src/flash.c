@@ -8,7 +8,7 @@
 
 #include "flash.h"
 
-#define MAGIC_WORD 0xABCFF123
+#define MAGIC_WORD 0xABCFF124
 
 RAM settings_struct settings;
 
