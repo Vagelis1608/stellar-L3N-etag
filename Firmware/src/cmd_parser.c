@@ -10,7 +10,8 @@
 #include "flash.h"
 
 extern settings_struct settings;
-extern remoteData remData;
+// extern remoteData remData;
+extern hddData hddsData;
 extern uint32_t current_unix_time;
 
 #define testPin GPIO_PD3
@@ -50,7 +51,7 @@ void cmd_parser(void * p){
 	}else if(inData == 0xA3){
 		settings.blinking_smiley = false;
 		settings.comfort_smiley = true; // Comfort Indicator
-	}else if(inData == 0xAB){
+	}else if(inData == 0xA4){
 		settings.blinking_smiley = true;//Smiley blinking
 	}else if(inData == 0xFE){
 		settings.advertising_interval = req->dat[1];//Set advertising interval with second byte, value*10second / 0=main_delay
@@ -78,7 +79,7 @@ void cmd_parser(void * p){
 	}
 	else if(inData == 0xE2){// force set an EPD scene
 		set_EPD_wait_flush();
-	} else if ( inData == 0xEA ) { // Remote memunit ( 1 byte ) and name, 18 ASCII chars / 18 bytes
+	} /* else if ( inData == 0xEA ) { // Remote memunit ( 1 byte ) and name, 18 ASCII chars / 18 bytes
 		int j = 0;
 		if ( req->dat[1] == 0x42 ) j = 18; // Name extension
 		else for ( int i = 0; i < 38; i++ ) remData.name[i] = 0x00; // Clear old name
@@ -131,6 +132,31 @@ void cmd_parser(void * p){
 		remData.updated = current_unix_time;
 	} else if ( inData == 0xED ) { // Reset Remote Data
 		remoteDataReset();
+	} */ else if ( inData == 0xAA ) { // HDDs Setup
+		int j = 0;
+		if ( req->dat[1] == 0xA2 ) j = 18; // Name extension
+		else if ( req->dat[1] == 0xA1 ) { for ( int i = 0; i < 38; i++ ) hddsData.name[i] = 0x00; } // Clear old name
+		if ( req->dat[1] == 0xA1 || req->dat[1] == 0xA2 ) {
+			for ( int i = 0; i < 18; i++ ) {
+				hddsData.name[i+j] = req->dat[i+2];
+			}
+			return;
+		}
+
+		int hdd = (int)req->dat[1];
+		hddsData.size[hdd] = (req->dat[2]<<8) + req->dat[3];
+		for ( int i = 0; i < 16; i++ ) {
+			hddsData.hddName[hdd][i] = req->dat[i+4];
+		}
+	} else if ( inData == 0xAB ) {
+		for ( int i = 0; i < HDDS; i++ ) {
+			hddsData.temps[i] = req->dat[2*(i+1)];
+			hddsData.useP[i] = req->dat[2*(i+1) + 1];
+		}
+
+		hddsData.updated = current_unix_time;
+	} else if ( inData == 0xAD ) {
+		hddsDataReset();
 	} else if ( inData == 0xEE ) {
 		settings.time_dilation = (req->dat[1]<<8) + req->dat[2];
 	} else if ( inData == 0xEF ) { // Reboot

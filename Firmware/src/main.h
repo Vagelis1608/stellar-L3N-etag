@@ -33,11 +33,21 @@
 #define NFC_CS		GPIO_PC6
 #define NFC_IRQ		GPIO_PC4
 
-typedef struct RemoteData {
+/* typedef struct RemoteData {
     uint8_t initd, temperature, localIP[4];
     uint16_t totalram, freeram, load[3];
     uint32_t updated;
     char name[38], uptime[50], memunit[8];
-} remoteData;
+} remoteData; */
 
-void remoteDataReset();
+#define HDDS 6
+typedef struct HddData {
+    uint8_t temps[HDDS], useP[HDDS];
+    uint16_t size[HDDS];
+    uint32_t updated;
+    char name[38], hddName[HDDS][16];
+} hddData;
+
+
+// void remoteDataReset();
+void hddsDataReset();

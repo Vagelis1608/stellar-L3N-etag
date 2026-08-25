@@ -23,7 +23,8 @@ extern const uint8_t ucMirror[];
 #include "font16zh.h"
 #include "font30.h"
 
-extern remoteData remData;
+extern hddData hddsData;
+// extern remoteData remData;
 RAM uint32_t remLastUpdate = 0;
 extern settings_struct settings;
 extern uint32_t current_unix_time;
@@ -32,8 +33,8 @@ RAM uint8_t epd_model = 0; // 0 = Undetected, 1 = BW213, 2 = BWR213, 3 = BWR154,
 const char *epd_model_string[] = {"NC", "BW213", "R213", "R154", "213ICE", "R296", "Rh160"};
 RAM uint8_t epd_update_state = 0;
 
-RAM uint8_t epd_scene = 3;
-RAM uint8_t epd_scene_on_screen = 3;
+RAM uint8_t epd_scene = 5;
+RAM uint8_t epd_scene_on_screen = 0;
 RAM uint8_t epd_wait_update = 0;
 
 RAM uint32_t fullRefresh = 0;
@@ -348,7 +349,7 @@ _attribute_ram_code_ void epd_display(struct date_time _time, uint16_t battery_m
     EPD_Display(epd_buffer, NULL, bufferSize, full_or_partial);
 }
 
-void epd_display_remote(struct date_time _time, uint16_t battery_mv, int16_t temperature, uint8_t full_or_partial) {
+/* void epd_display_remote(struct date_time _time, uint16_t battery_mv, int16_t temperature, uint8_t full_or_partial) {
     if ( remLastUpdate >= remData.updated && epd_scene_on_screen == 3 && full_or_partial == 0 ) return;
     remLastUpdate = remData.updated;
 
@@ -454,7 +455,42 @@ void epd_display_pc(struct date_time _time, uint16_t battery_mv, int16_t tempera
     obdWriteStringCustom(&obd, (GFXfont *)&Dialog_plain_16, 1, 150, (char *)buff, 1);
     FixBuffer(epd_temp, epd_buffer, resolution_w, resolution_h);
     EPD_Display(epd_buffer, NULL, bufferSize, full_or_partial);
+} */
+
+void epd_display_hdds(struct date_time _time, uint16_t battery_mv, int16_t temperature, uint8_t full_or_partial) {
+    if ( epd_model != 6 ) return;
+
+    uint16_t battery_level = get_battery_level(battery_mv), resolution_w = 296, resolution_h = 160;
+
+    epd_clear();
+
+    obdCreateVirtualDisplay(&obd, resolution_w, resolution_h, epd_temp);
+    obdFill(&obd, 0, 0); // fill with white
+
+    char buff[100];
+    sprintf(buff, "%s", hddsData.name );
+    obdWriteStringCustom(&obd, (GFXfont *)&Dialog_plain_16, 5, 17, (char *)buff, 1);
+    obdRectangle(&obd, 1, 18, 295, 20, 1, 1);
+
+    for ( int i = 0; i < HDDS; i++ ) {
+        sprintf(buff, "%s", hddsData.hddName[i] );
+        obdWriteStringCustom(&obd, (GFXfont *)&Dialog_plain_16, 3, (18*i + 37), (char *)buff, 1);
+        sprintf(buff, "%2u%%/%u.%uT", hddsData.useP[i], hddsData.size[i]/10, hddsData.size[i]%10 );
+        obdWriteStringCustom(&obd, (GFXfont *)&Dialog_plain_16, 162, (18*i + 37), (char *)buff, 1);
+        sprintf(buff, "%2uC", hddsData.temps[i] );
+        obdWriteStringCustom(&obd, (GFXfont *)&Dialog_plain_16, 260, (18*i + 37), (char *)buff, 1);
+        obdRectangle(&obd, 1, (18*i + 38), 295, (18*i + 38), 1, 1);
+    }
+
+    obdRectangle(&obd, 1, 19, 295, 131, 1, 0);
+    obdRectangle(&obd, 160, 19, 258, 131, 1, 0);
+    obdRectangle(&obd, 1, 129, 295, 133, 1, 1);
+    sprintf(buff, "V16_%02X%02X%02X %s - Batt: %d%%", mac_public[2], mac_public[1], mac_public[0], epd_model_string[epd_model], battery_level);
+    obdWriteStringCustom(&obd, (GFXfont *)&Dialog_plain_16, 1, 150, (char *)buff, 1);
+    FixBuffer(epd_temp, epd_buffer, resolution_w, resolution_h);
+    EPD_Display(epd_buffer, NULL, bufferSize, full_or_partial);
 }
+
 
 _attribute_ram_code_ void epd_display_char(uint8_t data)
 {
@@ -506,10 +542,13 @@ void epd_update(struct date_time _time, uint16_t battery_mv, int16_t temperature
             update_time_scene(_time, battery_mv, temperature, epd_display_time_with_date);
             break;
         case 3:
-            update_time_scene(_time, battery_mv, temperature, epd_display_remote);
-            break;
+            // update_time_scene(_time, battery_mv, temperature, epd_display_remote);
+            // break;
         case 4:
-            update_time_scene(_time, battery_mv, temperature, epd_display_pc);
+            // update_time_scene(_time, battery_mv, temperature, epd_display_pc);
+            // break;
+        case 5:
+            update_time_scene(_time, battery_mv, temperature, epd_display_hdds);
             break;
         default:
             break;

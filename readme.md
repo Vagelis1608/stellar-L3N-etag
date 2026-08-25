@@ -1,5 +1,7 @@
 ## Hanshow Stellar ESL firmware, modified to display info from a Remote device
 
+# This branch only has the HDDs scene. The other 2 remote scenes were removed to make space in RAM for it.
+
 Example/Basic program to upload the data with: https://github.com/Vagelis1608/esl-etag-raspbian
 
 Currently supported models are the L3N@ and Pro-266R-N

@@ -23,10 +23,11 @@ _attribute_ram_code_ __attribute__((optimize("-Os"))) void irq_handler(void)
 	irq_blt_sdk_handler();
 }
 
-RAM remoteData remData;
-RAM bool remDataInit = true;
+// RAM remoteData remData;
+RAM hddData hddsData;
+RAM bool remDataInit = true, hddsDataInit = true;
 
-void remoteDataReset() {
+/* void remoteDataReset() {
 	remData.temperature = 0;
 	remData.totalram = 0;
 	remData.freeram = 0;
@@ -40,6 +41,20 @@ void remoteDataReset() {
 	sprintf(remData.memunit, "Bs"+0x00);
 	sprintf(remData.uptime, "down");
 	remDataInit = false;
+} */
+
+void hddsDataReset() {
+	for ( int i = 0; i < 38; i++ ) hddsData.name[i] = 0x00;
+	sprintf(hddsData.name, "Not Connected");
+	for ( int i = 0; i < HDDS; i++ ) {
+		hddsData.temps[i] = 0;
+		hddsData.useP[i] = 0;
+		hddsData.size[i] = 0;
+		for ( int j = 0; j < 16; j++ ) { hddsData.hddName[i][j] = 0x00; }
+		sprintf(hddsData.hddName[i], "-");
+	}
+	hddsData.updated = 42;
+	hddsDataInit = false;
 }
 
 _attribute_ram_code_ int main (void)    //must run in ramcode
@@ -70,10 +85,8 @@ _attribute_ram_code_ int main (void)    //must run in ramcode
 	}	
     irq_enable();
 
-	// Initialize the Remote data
-	if ( remDataInit ) {
-		remoteDataReset();
-	}
+	// if ( remDataInit ) { remoteDataReset(); } // Initialize Remote data
+	if ( hddsDataInit ) { hddsDataReset(); } // Initialize HDD Data
 
 	set_buffSize();
 
